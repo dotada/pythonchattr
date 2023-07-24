@@ -1,6 +1,7 @@
 import socket
 import threading
 import sys
+import ssl
 def get_data():
     """
     Receives data from a socket connection and prints it to the console.
@@ -48,6 +49,9 @@ def send_data():
         sys.exit(0)
 
 s = socket.socket()
+ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+ssl_context.verify_mode = ssl.CERT_NONE
+s = ssl_context.wrap_socket(s, server_hostname='127.0.0.1')
 port = 666
 s.connect(('127.0.0.1', port))
 
