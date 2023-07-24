@@ -1,5 +1,6 @@
 import socket
 import ssl
+import threading
 s = socket.socket()
 print("Socket successfully created")
 port = 666
@@ -13,7 +14,6 @@ s = ssl_context.wrap_socket(s, server_side=True)
 s.listen(5)
 print("socket is listening")
 client_sockets = []
-client_socket, address = "", ""
 def getdata(client):
     """
     Receive data from a client and print it until a termination signal is received.
@@ -39,13 +39,20 @@ def getdata(client):
                 for cliente in client_sockets:
                     cliente.send(data)
     except ConnectionResetError:
+        client_sockets.remove(client)
         client = None
+def connection():
+    client_socket = ""
+    while True:
+        try:
+            client_socket, address = s.accept()
+            print(f"Connection established from {address}")
+            client_sockets.append(client_socket)
+            client_thread = threading.Thread(target=getdata, args=(client_socket,))
+            client_thread.start()
+        except ConnectionResetError:
+            client_sockets.remove(client_socket)
+            client_socket = None
 
-while True:
-    try:
-        client_socket, address = s.accept()
-        print(f"Connection established from {address}")
-        client_sockets.append(client_socket)
-        getdata(client_socket)
-    except ConnectionResetError:
-        client_sockets.remove(client_socket)
+accept_thread = threading.Thread(target=connection)
+accept_thread.start()
