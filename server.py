@@ -12,8 +12,8 @@ ssl_context.load_cert_chain(certfile='server.crt', keyfile='server.key')
 s = ssl_context.wrap_socket(s, server_side=True)
 s.listen(5)
 print("socket is listening")
-
-
+client_sockets = []
+client_socket, address = "", ""
 def getdata(client):
     """
     Receive data from a client and print it until a termination signal is received.
@@ -32,13 +32,20 @@ def getdata(client):
             data = client.recv(2048)
             if data == b'dc':
                 client.close()
+                client_sockets.remove(client)
                 break
             if data != b'':
                 print(data)
+                for cliente in client_sockets:
+                    cliente.send(data)
     except ConnectionResetError:
         client = None
 
 while True:
-    client_socket, address = s.accept()
-    print(f"Connection established from {address}")
-    getdata(client_socket)
+    try:
+        client_socket, address = s.accept()
+        print(f"Connection established from {address}")
+        client_sockets.append(client_socket)
+        getdata(client_socket)
+    except ConnectionResetError:
+        client_sockets.remove(client_socket)
