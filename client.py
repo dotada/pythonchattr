@@ -1,8 +1,8 @@
+# pylint: disable=missing-module-docstring, invalid-name
 import socket
 import threading
 import sys
 import ssl
-
 
 def get_data():
     """

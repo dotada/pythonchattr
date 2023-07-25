@@ -1,3 +1,4 @@
+# pylint: disable=missing-module-docstring, invalid-name, consider-using-f-string, line-too-long
 import socket
 import ssl
 import threading
