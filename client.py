@@ -2,6 +2,8 @@ import socket
 import threading
 import sys
 import ssl
+
+
 def get_data():
     """
     Receives data from a socket connection and prints it to the console.
@@ -17,7 +19,8 @@ def get_data():
             else:
                 pass
     except ConnectionAbortedError:
-        sys.exit(0)        
+        sys.exit(0)
+
 
 def send_data():
     """
@@ -48,6 +51,7 @@ def send_data():
     except ConnectionAbortedError:
         sys.exit(0)
 
+
 s = socket.socket()
 ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
 ssl_context.verify_mode = ssl.CERT_NONE
@@ -64,4 +68,3 @@ try:
     t2.join()
 except ConnectionAbortedError:
     sys.exit(0)
-
