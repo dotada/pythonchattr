@@ -10,7 +10,7 @@ print("socket bound to %s" % (port))
 ssl_context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
 ssl_context.check_hostname = False
 ssl_context.verify_mode = ssl.CERT_NONE
-ssl_context.load_cert_chain(certfile='server.crt', keyfile='server.key')
+ssl_context.load_cert_chain(certfile='fullchain.pem', keyfile='privkey.pem')
 s = ssl_context.wrap_socket(s, server_side=True)
 s.listen(5)
 print("socket is listening")
